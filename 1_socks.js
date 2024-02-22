@@ -1,6 +1,7 @@
 // 양말 페어 찾기
 // int n: 양말의 수, int ar: 각 양말의 색상
 // Sample Input, n=9, ar=[10 20 20 10 10 30 50 10 20] 인 경우, Output은 3
+// https://www.hackerrank.com/challenges/sock-merchant/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=warmup
 
 "use strict";
 
