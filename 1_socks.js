@@ -43,7 +43,7 @@ function sockMerchant(n, ar) {
 
   let paired = {}; // paired socks
   ar.forEach((x) => {
-    paired[x] = (paired[x] || 0) + 1;
+    paired[x] = (paired[x] || 0) + 1; // 중복 개수 구하기
   });
   console.log(paired);
   let result = 0;
