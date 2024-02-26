@@ -166,7 +166,7 @@ console.log( arr ); // [ 1, 2, 3, 5, 10, 11, 12, 13 ]
 ```
 
 toString()
-배열을 문자열로 바꾸어 반환한다
+배열을 문자열로 바꾸어 반환한다, toString(2) 이진수 스트링으로 변환
 
 ```
 var arr =[ 1, 2, 3, 4 ];
@@ -231,7 +231,15 @@ entries === [
 */
 ```
 
+## Math 객체 메서드
+
+Math.max(), Math.min(): 주어진 숫자 중 가장 큰 값 또는 작은 값 반환합니다.
+Math.abs(): 숫자의 절대값을 반환합니다.
+Math.floor(), Math.ceil(), Math.round(): 소수점 이하를 버리거나 올림, 반올림합니다.
+Math.random(): 0부터 1 사이의 난수를 반환합니다.
+
 ### JS에서 값 입력시
+
 ```javascript
 const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
@@ -240,26 +248,26 @@ const [N, M] = input1.shift().split(" ").map(Number);
 // const input = JSON.parse(JSON.stringify(input1)); 깊은 복사
 
 // 1. 하나의 값을 입력받을 때
-const input = require('fs').readFileSync('/dev/stdin').toString().trim();
+const input = require("fs").readFileSync("/dev/stdin").toString().trim();
 
 // 2. 공백으로 구분된 한 줄의 값들을 입력받을 때
-const input = require('fs').readFileSync('/dev/stdin').toString().trim().split(' ');
+const input = require("fs").readFileSync("/dev/stdin").toString().trim().split(" ");
 
 // 3. 여러 줄의 값들을 입력받을 때
-const input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n');
+const input = require("fs").readFileSync("/dev/stdin").toString().trim().split("\n");
 
 // 4. 첫 번째 줄에 자연수 n을 입력받고, 그 다음줄에 공백으로 구분된 n개의 값들을 입력받을 때
-const [n, ...arr] = require('fs').readFileSync('/dev/stdin').toString().trim().split(/\s/);
+const [n, ...arr] = require("fs").readFileSync("/dev/stdin").toString().trim().split(/\s/);
 
 // 5. 첫 번째 줄에 자연수 n을 입력받고, 그 다음줄부터 n개의 줄에 걸쳐 한 줄에 하나의 값을 입력받을 때
-const [n, ...arr] = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n');
+const [n, ...arr] = require("fs").readFileSync("/dev/stdin").toString().trim().split("\n");
 
 // 6. 하나의 값 또는 공백으로 구분된 여러 값들을 여러 줄에 걸쳐 뒤죽박죽 섞여서 입력받을 때
 // ex) n 입력 - 공백으로 구분된 n개의 값 입력 - m 입력 - 여러 줄에 걸쳐 m개의 값 입력
-const input = require('fs').readFileSync('/dev/stdin').toString().trim().split(/\s/);
+const input = require("fs").readFileSync("/dev/stdin").toString().trim().split(/\s/);
 const n = input[0];
-const n_arr = input.slice(1, n+1);
-const [m, ...m_arr] = input.slice(n+1);
+const n_arr = input.slice(1, n + 1);
+const [m, ...m_arr] = input.slice(n + 1);
 
 // 2~6에서 입력받는 값들을 모두 String에서 Number로 바꾸려면 split()뒤에 .map(Number)를 추가
 ```
@@ -307,61 +315,99 @@ function binarySearch(arr, target) {
 먼저, 간단한 그래프 구조를 표현하기 위해 인접 리스트를 사용하겠습니다.
 
 ```javascript
-// 그래프를 표현하는 인접 리스트
-const graph = {
-  1: [2, 3],
-  2: [4, 5],
-  3: [],
-  4: [],
-  5: [],
-};
+// BFS: 너비 우선 탐색
+function bfs(root) {
+  const queue = [root]; // 큐를 이용하여 방문할 노드를 유지
+  const visited = new Set(); // 방문한 노드를 추적하기 위한 Set
 
-// BFS 함수
-function bfs(graph, start) {
-  const visited = {}; // 방문한 노드를 저장할 객체
-  const queue = [start]; // 큐를 사용하여 탐색할 노드를 관리
+  while (queue.length > 0) {
+    const node = queue.shift(); // 큐에서 첫 번째 요소 추출
+    if (!visited.has(node)) {
+      visited.add(node); // 방문한 노드를 기록
+      console.log(node); // 노드를 방문할 때마다 출력
 
-  visited[start] = true; // 시작 노드를 방문 처리
-
-  while (queue.length) {
-    const vertex = queue.shift(); // 큐의 맨 앞에서 노드를 추출
-    console.log(vertex); // 현재 노드 출력
-
-    // 현재 노드와 인접한 모든 미방문 노드를 큐에 추가하고 방문 처리
-    for (const neighbor of graph[vertex]) {
-      if (!visited[neighbor]) {
-        visited[neighbor] = true;
-        queue.push(neighbor);
+      // 노드의 자식(이웃) 노드를 큐에 추가
+      if (node.children) {
+        for (const child of node.children) {
+          queue.push(child);
+        }
       }
     }
   }
 }
 
-// DFS 함수
-function dfs(graph, start, visited = {}) {
-  console.log(start); // 현재 노드 출력
-  visited[start] = true; // 현재 노드를 방문 처리
+// DFS: 깊이 우선 탐색
+function dfs(node, visited = new Set()) {
+  if (!node || visited.has(node)) {
+    return; // 노드가 null이거나 이미 방문한 노드인 경우 종료
+  }
 
-  // 현재 노드와 인접한 모든 미방문 노드를 재귀적으로 탐색
-  for (const neighbor of graph[start]) {
-    if (!visited[neighbor]) {
-      dfs(graph, neighbor, visited);
+  visited.add(node); // 방문한 노드를 기록
+  console.log(node); // 노드를 방문할 때마다 출력
+
+  // 노드의 자식(이웃) 노드를 재귀적으로 방문
+  if (node.children) {
+    for (const child of node.children) {
+      dfs(child, visited);
     }
   }
 }
 
-// BFS 실행
-console.log("BFS:");
-bfs(graph, 1);
+// 예제 노드 정의
+const node1 = {
+  val: 1,
+  children: [
+    { val: 2, children: [{ val: 4 }] },
+    { val: 3, children: [{ val: 5 }] },
+  ],
+};
 
-// DFS 실행
-console.log("DFS:");
-dfs(graph, 1);
+console.log("BFS:");
+bfs(node1);
+console.log("\nDFS:");
+dfs(node1);
 ```
 
 위 코드에서는 간단한 인접 리스트로 그래프를 표현하고, BFS 함수와 DFS 함수를 구현했습니다.
 각 함수는 그래프와 시작 노드를 입력으로 받습니다.
 BFS 함수는 큐를 사용하여 너비 우선 탐색을 수행하고, DFS 함수는 재귀적으로 깊이 우선 탐색을 수행합니다.
+
+```javascript
+// BFS와 DFS의 핵심 로직이 동일한 함수
+function search(root, isBFS = true) {
+  const queueOrStack = [root]; // 큐 또는 스택을 이용하여 방문할 노드를 유지
+  const visited = new Set(); // 방문한 노드를 추적하기 위한 Set
+
+  while (queueOrStack.length > 0) {
+    const node = isBFS ? queueOrStack.shift() : queueOrStack.pop(); // 큐 또는 스택에서 요소 추출
+    if (!visited.has(node)) {
+      visited.add(node); // 방문한 노드를 기록
+      console.log(node); // 노드를 방문할 때마다 출력
+
+      // 노드의 자식(이웃) 노드를 큐 또는 스택에 추가
+      if (node.children) {
+        for (const child of node.children) {
+          isBFS ? queueOrStack.push(child) : queueOrStack.unshift(child);
+        }
+      }
+    }
+  }
+}
+
+// 예제 노드 정의
+const node1 = {
+  val: 1,
+  children: [
+    { val: 2, children: [{ val: 4 }] },
+    { val: 3, children: [{ val: 5 }] },
+  ],
+};
+
+console.log("BFS:");
+search(node1, true);
+console.log("\nDFS:");
+search(node1, false);
+```
 
 ## 시간 복잡도
 
@@ -534,3 +580,8 @@ console.log("Selected activities:", selectedActivities);
 ```
 
 위의 코드는 활동 선택 문제를 그리디 알고리즘으로 해결하는 방법을 보여줍니다. 활동을 끝나는 시간을 기준으로 정렬한 후, 각 단계에서 가장 빨리 끝나는 활동을 선택하여 최대한 많은 활동을 선택합니다.
+
+```javascript
+// 20개의 배열 생성 시 각 값이 index인 배열
+const stringArray = Array.from({ length: 20 }, (_, index) => index.toString());
+```
