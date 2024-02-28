@@ -103,6 +103,11 @@ var arr =[ 1, 2, 3 ];
 arr.forEach( function( value ) {
   console.log( value );   // 1 2 3
 });
+
+const paired = {};
+arr.forEach((x) => {
+  paired[x] = (paired[x] || 0) + 1; // 중복 개수 구함
+}) // 결과 {'1': 2, '2': 4 ...}
 ```
 
 map()
@@ -584,4 +589,34 @@ console.log("Selected activities:", selectedActivities);
 ```javascript
 // 20개의 배열 생성 시 각 값이 index인 배열
 const stringArray = Array.from({ length: 20 }, (_, index) => index.toString());
+```
+
+## 문자열 자르는 메서드
+
+`slice(startIndex, endIndex)`: 문자열을 시작 인덱스부터 종료 인덱스 직전까지 자릅니다. endIndex는 포함안함
+음수 인덱스를 사용하면 문자열의 끝에서부터 역순으로 세어집니다.
+
+```javascript
+const str = "Hello, world!";
+const sliced = str.slice(0, 5); // "Hello"
+const sliced2 = str.slice(-6); // "world!"
+```
+
+`substring(startIndex, endIndex)`: slice()와 비슷하지만 음수 인덱스를 지원하지 않습니다. 만약 startIndex이 endIndex보다 크면 두 인덱스는 교환됩니다.
+
+```javascript
+const str = "Hello, world!";
+const sub = str.substring(7, 12); // "world"
+```
+
+`substr(startIndex, length)`: 시작 인덱스부터 주어진 길이만큼의 문자열을 자릅니다.
+
+```javascript
+const str = "Hello, world!";
+const sub = str.substr(7, 5); // "world"
+```
+
+참고, 객체에서 값이 1인 객체의 인덱스 구하기, (map 대신 사용하려고 알아둠)
+```
+const keysWithValue1 = Object.keys(obj).filter(key => obj[key] === 1).join(', ');
 ```
